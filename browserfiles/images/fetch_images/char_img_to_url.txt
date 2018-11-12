@@ -27,6 +27,9 @@ jigglypuff1.png /images/thumb/6/6a/Jigglypuff_SSBU.png/100px-Jigglypuff_SSBU.png
 mewtwo1.png /images/thumb/d/de/Mewtwo_SSBU.png/99px-Mewtwo_SSBU.png
 pichu1.png /images/thumb/c/c1/Pichu_SSBU.png/100px-Pichu_SSBU.png
 pokemontrainer1.png /images/thumb/2/28/Pok%C3%A9mon_Trainer_%28solo%29_SSBU.png/100px-Pok%C3%A9mon_Trainer_%28solo%29_SSBU.png
+squirtle1.png /images/thumb/7/79/Squirtle_SSBU.png/89px-Squirtle_SSBU.png
+ivysaur1.png /images/thumb/5/52/Ivysaur_SSBU.png/100px-Ivysaur_SSBU.png
+charizard1.png /images/thumb/2/21/Charizard_SSBU.png/100px-Charizard_SSBU.png
 lucario1.png /images/thumb/0/08/Lucario_SSBU.png/100px-Lucario_SSBU.png
 greninja1.png /images/thumb/d/da/Greninja_SSBU.png/100px-Greninja_SSBU.png
 cf1.png /images/thumb/d/da/Captain_Falcon_SSBU.png/100px-Captain_Falcon_SSBU.png
