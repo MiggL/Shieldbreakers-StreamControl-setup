@@ -5,7 +5,9 @@
 	<script src="js/tweenjs-2017.10.12.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/countries.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript">
-      var char_icon_width = 50;//px
+      //Fixed size in px for the character icons.
+      var char_icon_size = 50;
+      var char_icon_fixed_width = false;//if false, height will be fixed instead.
 			
 			var timestampOld;
 			var timestamp;
@@ -83,14 +85,14 @@
 				board.addChild(pFlag2);
 
         pCharIcon1 = new createjs.Container();
-        pCharIcon1.x = 718;
+        pCharIcon1.x = 716;
         pCharIcon1.y = 1;
         pCharIcon1.alpha=0;
 
         board.addChild(pCharIcon1);
 
         pCharIcon2 = new createjs.Container();
-        pCharIcon2.x = 1920-char_icon_width-pCharIcon1.x;
+        pCharIcon2.x = 1920-char_icon_size-pCharIcon1.x;
         pCharIcon2.y = pCharIcon1.y;
         pCharIcon2.alpha=0;
 
@@ -234,13 +236,13 @@
 				
 				if (oldChar1 != pChar1 || pCharIcon1.alpha == 0) {
 					animating = true;
-					var pCharIcon1n = new createjs.Bitmap("images/smash_ultimate_char_icons/" + pChar1 + ".png");
+					var pCharIcon1n = new createjs.Bitmap("images/smash_ultimate/" + pChar1 + ".png");
 					
 					createjs.Tween.get(pCharIcon1).to({alpha:0},500, createjs.Ease.quintIn).call(function() {
 						pCharIcon1.removeAllChildren();
 						
             if (pCharIcon1n.image.height != 0) { //image exists
-              pCharIcon1n.scaleX = char_icon_width / pCharIcon1n.image.width;
+              pCharIcon1n.scaleX = char_icon_size / (char_icon_fixed_width?pCharIcon1n.image.width:pCharIcon1n.image.height);
               pCharIcon1n.scaleY = pCharIcon1n.scaleX;
               
               pCharIcon1.addChild(pCharIcon1n);
@@ -252,15 +254,15 @@
 				
 				if (oldChar2 != pChar2 || pCharIcon2.alpha == 0) {
 					animating = true;
-					var pCharIcon2n = new createjs.Bitmap("images/smash_ultimate_char_icons/" + pChar2 + ".png");
+					var pCharIcon2n = new createjs.Bitmap("images/smash_ultimate/" + pChar2 + ".png");
 					
 					createjs.Tween.get(pCharIcon2).to({alpha:0},500, createjs.Ease.quintIn).call(function() {
 						pCharIcon2.removeAllChildren();
 						
             if (pCharIcon2n.image.height != 0) { //image exists
-              pCharIcon2n.scaleX = char_icon_width / pCharIcon2n.image.width;
+              pCharIcon2n.scaleX = char_icon_size / (char_icon_fixed_width?pCharIcon2n.image.width:pCharIcon2n.image.height);
               pCharIcon2n.scaleY = pCharIcon2n.scaleX;
-              
+
               pCharIcon2.addChild(pCharIcon2n);
             }
 						oldChar2 = pChar2;
