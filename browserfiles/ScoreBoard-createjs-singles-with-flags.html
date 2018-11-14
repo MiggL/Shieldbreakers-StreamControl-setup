@@ -17,8 +17,12 @@
       var pScore2;
       var pChar1;
       var pChar2;
+      var pCountry1;
+      var pCountry2;
       var oldChar1 = "";
       var oldChar2 = "";
+      var oldCountry1 = "";
+      var oldCountry2 = "";
       var round;
 
       var xmlDoc;
@@ -28,7 +32,7 @@
       var animating = false;
       var doUpdate = false;
 
-      var stage,board,pName1t,pName2t,pScore1t,pScore2t,pChar1b,pChar2b,pCharIcon1,pCharIcon2,roundt;
+      var stage,board,pName1t,pName2t,pScore1t,pScore2t,pCountry1b,pCountry2b,pFlag1,pFlag2,pChar1b,pChar2b,pCharIcon1,pCharIcon2,roundt;
 
       function init() {
 
@@ -43,7 +47,7 @@
         board = new createjs.Container();
 
 
-        scoreboard = new createjs.Bitmap("images/singles-overlay.png");
+        scoreboard = new createjs.Bitmap("images/singles-overlay-with-flags.png");
         scoreboard.regX = 0;
         scoreboard.regY = 0;
 
@@ -64,6 +68,20 @@
         pName2t.textAlign = "center";
 
         board.addChild(pName2t);
+
+        pFlag1 = new createjs.Container();
+        pFlag1.x = 333;
+        pFlag1.y = 27;
+        pFlag1.alpha=0;
+
+        board.addChild(pFlag1);
+
+        pFlag2 = new createjs.Container()
+        pFlag2.x = 1920-60-pFlag1.x;
+        pFlag2.y = pFlag1.y;
+        pFlag2.alpha=0;
+
+        board.addChild(pFlag2);
 
         pCharIcon1 = new createjs.Container();
         pCharIcon1.x = 716;
@@ -141,6 +159,8 @@
             pName2 = getValueFromTag(xmlDoc,'pName2');
             pScore1 = getValueFromTag(xmlDoc,'pScore1');
             pScore2 = getValueFromTag(xmlDoc,'pScore2');
+            pCountry1 = getCountry(getValueFromTag(xmlDoc,'pCountry1'));
+            pCountry2 = getCountry(getValueFromTag(xmlDoc,'pCountry2'));
             pChar1 = getValueFromTag(xmlDoc,'pChar1');
             pChar2 = getValueFromTag(xmlDoc,'pChar2');
             round = getValueFromTag(xmlDoc,'round');
@@ -175,6 +195,32 @@
         if (pScore2t.text != pScore2) {
           animating = true;
           createjs.Tween.get(pScore2t).to({alpha:0},500, createjs.Ease.quintIn).call(function() {pScore2t.text = pScore2;})
+            .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
+        }
+
+        if (oldCountry1 != pCountry1 || pFlag1.alpha == 0) {
+          animating = true;
+          var pFlag1n = new createjs.Bitmap("images/GoSquared/cropped/iso/64shiny/" + pCountry1 + ".png");
+
+          createjs.Tween.get(pFlag1).to({alpha:0},500, createjs.Ease.quintIn).call(function() {
+            pFlag1.removeAllChildren();
+
+            pFlag1.addChild(pFlag1n);
+            oldCountry1 = pCountry1;
+          })
+            .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
+        }
+
+        if (oldCountry2 != pCountry2 || pFlag2.alpha == 0) {
+          animating = true;
+          var pFlag2n = new createjs.Bitmap("images/GoSquared/cropped/iso/64shiny/" + pCountry2 + ".png");
+
+          createjs.Tween.get(pFlag2).to({alpha:0},500, createjs.Ease.quintIn).call(function() {
+            pFlag2.removeAllChildren();
+
+            pFlag2.addChild(pFlag2n);
+            oldCountry2 = pCountry2;
+          })
             .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
         }
 
@@ -233,6 +279,18 @@
         } else {
           return '';
         }
+      }
+
+      function getCountry (country) {
+
+        var count = iso.findCountryByName(country);
+        if (!count)
+          count = iso.findCountryByCode(country);
+        if (!count) {
+          return "unknown";
+        }
+
+        return count['value'].toUpperCase();
       }
     </script>
   </head>
