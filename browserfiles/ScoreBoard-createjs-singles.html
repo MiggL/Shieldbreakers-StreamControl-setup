@@ -23,7 +23,6 @@
       var oldChar2 = "";
       var oldCountry1 = "";
       var oldCountry2 = "";
-      var contest;
       var round;
 
       var xmlDoc;
@@ -33,7 +32,7 @@
       var animating = false;
       var doUpdate = false;
 
-      var stage,board,pName1t,pName2t,pScore1t,pScore2t,pCountry1b,pCountry2b,contestt,pFlag1,pFlag2,pChar1b,pChar2b,pCharIcon1,pCharIcon2,roundt;
+      var stage,board,pName1t,pName2t,pScore1t,pScore2t,pCountry1b,pCountry2b,pFlag1,pFlag2,pChar1b,pChar2b,pCharIcon1,pCharIcon2,roundt;
 
       function init() {
 
@@ -112,14 +111,6 @@
 
         board.addChild(pScore2t);
 
-        contestt = new createjs.Text("", "19px Helvetica", "#333333");
-        contestt.x = 960;
-        contestt.y = 51;
-        contestt.maxWidth = 184;
-        contestt.textAlign = "center";
-
-        board.addChild(contestt);
-
         roundt = new createjs.Text("", "22px Helvetica", "#ffffff");
         roundt.x = 960;
         roundt.y = 11;
@@ -172,7 +163,6 @@
             pCountry2 = getCountry(getValueFromTag(xmlDoc,'pCountry2'));
             pChar1 = getValueFromTag(xmlDoc,'pChar1');
             pChar2 = getValueFromTag(xmlDoc,'pChar2');
-            contest = getValueFromTag(xmlDoc,'contest');
             round = getValueFromTag(xmlDoc,'round');
             timestampOld = timestamp;
             timestamp = getValueFromTag(xmlDoc,'timestamp');
@@ -267,12 +257,6 @@
             }
             oldChar2 = pChar2;
           })
-            .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (contestt.text != contest) {
-          animating = true;
-          createjs.Tween.get(contestt).to({alpha:0},500, createjs.Ease.quintIn).call(function() {contestt.text = contest;})
             .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
         }
 
