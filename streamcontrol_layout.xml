@@ -2,19 +2,19 @@
 <!-- Smallest width for lineEdit = ~38 -->
 <layout width="500" height="400" tabbed="1">
  <tab name="Scoreboard">
-  <lineEdit id="pName1" x="10" y="10" width="160" height="20" dataSet="players.csv" >Player 1</lineEdit>
-  <lineEdit id="pCountry1" x="174" y="10" width="38" height="20" dataSet="players.csv" dataField="2" master="pName1">Country</lineEdit>
-  <lineEdit id="pChar1" x="216" y="10" width="50" height="20" dataSet="players.csv" dataField="3" master="pName1">Char</lineEdit>
-  <lineEdit id="teammateName1" x="10" y="34" width="160" height="20" dataSet="players.csv" >Player 1 Teammate</lineEdit>
-  <lineEdit id="teammateCountry1" x="174" y="34" width="38" height="20" dataSet="players.csv" dataField="2" master="teammateName1">Country</lineEdit>
-  <lineEdit id="teammateChar1" x="216" y="34" width="50" height="20" dataSet="players.csv" dataField="3" master="teammateName1">Char</lineEdit>
+  <lineEdit id="pName1" x="10" y="10" width="130" height="20" dataSet="players.csv" >Player 1</lineEdit>
+  <lineEdit id="pCountry1" x="144" y="10" width="38" height="20" dataSet="players.csv" dataField="2" master="pName1">Country</lineEdit>
+  <lineEdit id="pChar1" x="186" y="10" width="80" height="20" dataSet="players.csv" dataField="3" master="pName1">Char</lineEdit>
+  <lineEdit id="teammateName1" x="10" y="34" width="130" height="20" dataSet="players.csv" >Player 1 Teammate</lineEdit>
+  <lineEdit id="teammateCountry1" x="144" y="34" width="38" height="20" dataSet="players.csv" dataField="2" master="teammateName1">Country</lineEdit>
+  <lineEdit id="teammateChar1" x="186" y="34" width="80" height="20" dataSet="players.csv" dataField="3" master="teammateName1">Char</lineEdit>
 
-  <lineEdit id="pName2" x="10" y="62" width="160" height="20" dataSet="players.csv" >Player 2</lineEdit>
-  <lineEdit id="pCountry2" x="174" y="62" width="38" height="20" dataSet="players.csv" dataField="2" master="pName2" >Country</lineEdit>
-  <lineEdit id="pChar2" x="216" y="62" width="50" height="20" dataSet="players.csv" dataField="3" master="pName2">Char</lineEdit>
-  <lineEdit id="teammateName2" x="10" y="86" width="160" height="20" dataSet="players.csv" >Player 2 Teammate</lineEdit>
-  <lineEdit id="teammateCountry2" x="174" y="86" width="38" height="20" dataSet="players.csv" dataField="2" master="name2" >Country</lineEdit>
-  <lineEdit id="teammateChar2" x="216" y="86" width="50" height="20" dataSet="players.csv" dataField="3" master="teammateName2">Char</lineEdit>
+  <lineEdit id="pName2" x="10" y="62" width="130" height="20" dataSet="players.csv" >Player 2</lineEdit>
+  <lineEdit id="pCountry2" x="144" y="62" width="38" height="20" dataSet="players.csv" dataField="2" master="pName2" >Country</lineEdit>
+  <lineEdit id="pChar2" x="186" y="62" width="80" height="20" dataSet="players.csv" dataField="3" master="pName2">Char</lineEdit>
+  <lineEdit id="teammateName2" x="10" y="86" width="130" height="20" dataSet="players.csv" >Player 2 Teammate</lineEdit>
+  <lineEdit id="teammateCountry2" x="144" y="86" width="38" height="20" dataSet="players.csv" dataField="2" master="teammateName2" >Country</lineEdit>
+  <lineEdit id="teammateChar2" x="186" y="86" width="80" height="20" dataSet="players.csv" dataField="3" master="teammateName2">Char</lineEdit>
 
   <spinBox id="pScore1" x="270" y="10" width="40" height="32" maximum="999" />
   <spinBox id="pScore2" x="270" y="62" width="40" height="32" maximum="999" />
@@ -31,7 +31,7 @@
   <lineEdit id="round" x="60" y="145" width="321" height="20"/>
  </tab>
  <tab name="Load from challonge">
-     <challonge x="20" y="10" width="400" height="420"
+     <challonge x="20" y="0" width="400" height="280"
                 playerOneWidget="pName1" playerTwoWidget="pName2"
                 bracketWidget="contest" tournamentStageWidget="round">
          <grandFinal p1name="gfp1" p1score="gfp1s" p2name="gfp2" p2score="gfp2s" />
