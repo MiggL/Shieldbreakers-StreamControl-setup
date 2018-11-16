@@ -4,6 +4,7 @@
     <script src="js/easeljs-2017.10.12.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/tweenjs-2017.10.12.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/countries.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/common.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
       //Fixed size in px for the character icons.
       var char_icon_size = 50;
@@ -164,10 +165,10 @@
             teammateName2 = getValueFromTag(xmlDoc,'teammateName2');
             pScore1 = getValueFromTag(xmlDoc,'pScore1');
             pScore2 = getValueFromTag(xmlDoc,'pScore2');
-            pChar1 = getValueFromTag(xmlDoc,'pChar1');
-            pChar2 = getValueFromTag(xmlDoc,'pChar2');
-            teammateChar1 = getValueFromTag(xmlDoc,'teammateChar1');
-            teammateChar2 = getValueFromTag(xmlDoc,'teammateChar2');
+            pChar1 = getSmashChar(getValueFromTag(xmlDoc,'pChar1'));
+            pChar2 = getSmashChar(getValueFromTag(xmlDoc,'pChar2'));
+            teammateChar1 = getSmashChar(getValueFromTag(xmlDoc,'teammateChar1'));
+            teammateChar2 = getSmashChar(getValueFromTag(xmlDoc,'teammateChar2'));
             round = getValueFromTag(xmlDoc,'round');
             timestampOld = timestamp;
             timestamp = getValueFromTag(xmlDoc,'timestamp');
@@ -282,18 +283,6 @@
         }
 
         doUpdate = false;
-      }
-
-      function getValueFromTag (xmlDoc,tag) {
-        if (xmlDoc.getElementsByTagName(tag).length != 0 ) {
-          if (xmlDoc.getElementsByTagName(tag)[0].childNodes.length == 0) {
-            return '';
-          } else {
-            return xmlDoc.getElementsByTagName(tag)[0].childNodes[0].nodeValue;
-          }
-        } else {
-          return '';
-        }
       }
     </script>
   </head>
