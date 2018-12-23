@@ -27,20 +27,23 @@
     <script src="js/overlay-updater.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
 
-      const maxNameWidth = 200;
+      const maxNameWidth = 280;
       const maxScoreWidth = 50;
-      const fontsize = 28;
-      const fontcolor = "#000000";
+      const fontsize = 30;
+      const fontcolor = "#FFFFFF";
+      const losecolor = "#708090";
       var stage;
 
       function newMatch(matchtag, x, y) {
         let match = new createjs.Container();
         match.x = x;
         match.y = y;
-        match.addChild(newDynText(`${matchtag}p1`, 0, 0, maxNameWidth, fontsize, fontcolor));
-        match.addChild(newDynText(`${matchtag}p1s`, 115, 0, maxScoreWidth, fontsize, fontcolor));
-        match.addChild(newDynText(`${matchtag}p2`, 0, 50, maxNameWidth, fontsize, fontcolor));
-        match.addChild(newDynText(`${matchtag}p2s`, 115, 50, maxScoreWidth, fontsize, fontcolor));
+
+        //Preserve this order and naming for everything else to work.
+        match.addChild(newDynText(`${matchtag}p1`, 178, 0, maxNameWidth, fontsize, fontcolor));
+        match.addChild(newDynText(`${matchtag}p1s`, 0, 0, maxScoreWidth, fontsize, fontcolor));
+        match.addChild(newDynText(`${matchtag}p2`, 178, 70, maxNameWidth, fontsize, fontcolor));
+        match.addChild(newDynText(`${matchtag}p2s`, 0, 70, maxScoreWidth, fontsize, fontcolor));
         return match;
       }
 
@@ -52,16 +55,16 @@
         stage = new createjs.Stage("myCanvas");
         let board = new createjs.Container();
         board.addChild(new createjs.Bitmap("images/bracket.png"));
-        board.addChild(newMatch("ws1", 550, 100));
-        board.addChild(newMatch("ws2", 550, 300));
-        board.addChild(newMatch("wf", 1075, 200));
-        board.addChild(newMatch("ltop81", 200, 600));
-        board.addChild(newMatch("ltop82", 200, 800));
-        board.addChild(newMatch("lq1", 550, 575));
-        board.addChild(newMatch("lq2", 550, 775));
-        board.addChild(newMatch("ls", 900, 675));
-        board.addChild(newMatch("lf", 1250, 650));
-        board.addChild(newMatch("gf", 1600, 425));
+        board.addChild(newMatch("ws1", 107, 158));
+        board.addChild(newMatch("ws2", 107, 358));
+        board.addChild(newMatch("wf", 568, 258));
+        board.addChild(newMatch("ltop81", 107, 618));
+        board.addChild(newMatch("ltop82", 107, 818));
+        board.addChild(newMatch("lq1", 568, 618));
+        board.addChild(newMatch("lq2", 568, 818));
+        board.addChild(newMatch("ls", 1029, 718));
+        board.addChild(newMatch("lf", 1490, 648));
+        board.addChild(newMatch("gf", 1029, 328));
 
         stage.addChild(board);
 

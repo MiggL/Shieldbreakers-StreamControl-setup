@@ -71,7 +71,27 @@ function updateText(dynamicText, name, dynTexts) {
     animating = true;
     createjs.Tween.get(dynamicText)
       .to({alpha:0},500,createjs.Ease.quintIn)
-      .call(function() {dynamicText.text = newText;})
+      .call(function() {
+        dynamicText.text = newText;
+
+        //fade losing player in bracket overlay
+        let opponentDynText = dynTexts.get(name.substr(0, name.length-2) + "1s");
+        if (name.endsWith("p2s") && opponentDynText != undefined) {
+          let oppSc = parseInt(opponentDynText.text);
+          let oppNa = dynTexts.get(name.substr(0, name.length-2) + "1");
+          let myName = dynTexts.get(name.substr(0, name.length-1));
+          if (oppSc < parseInt(newText)) {
+            oppNa.color = losecolor;
+            myName.color = fontcolor;
+          } else if (oppSc > parseInt(newText)) {
+            oppNa.color = fontcolor;
+            myName.color = losecolor;
+          } else {
+            oppNa.color = fontcolor;
+            myName.color = fontcolor;
+          }
+        }
+      })
       .to({alpha:1},500,createjs.Ease.quintOut)
       .call(function() {animating = false;});
   }
