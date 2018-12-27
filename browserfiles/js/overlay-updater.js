@@ -75,20 +75,20 @@ function updateText(dynamicText, name, dynTexts) {
         dynamicText.text = newText;
 
         //fade losing player in bracket overlay
-        let opponentDynText = dynTexts.get(name.substr(0, name.length-2) + "1s");
-        if (name.endsWith("p2s") && opponentDynText != undefined) {
-          let oppSc = parseInt(opponentDynText.text);
-          let oppNa = dynTexts.get(name.substr(0, name.length-2) + "1");
-          let myName = dynTexts.get(name.substr(0, name.length-1));
+        if (name.endsWith("p1s") || name.endsWith("p2s")) {
+          let oppNaStr = name.substr(0, name.length-2) + (name.endsWith("1s")?"2":"1");
+          let oppSc = parseInt(dynTexts.get(oppNaStr + "s").text);
+          let oppNa = dynTexts.get(oppNaStr);
+          let myNa = dynTexts.get(name.substr(0, name.length-1));
           if (oppSc < parseInt(newText)) {
             oppNa.color = losecolor;
-            myName.color = fontcolor;
+            myNa.color = fontcolor;
           } else if (oppSc > parseInt(newText)) {
             oppNa.color = fontcolor;
-            myName.color = losecolor;
+            myNa.color = losecolor;
           } else {
             oppNa.color = fontcolor;
-            myName.color = fontcolor;
+            myNa.color = fontcolor;
           }
         }
       })
