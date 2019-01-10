@@ -17,6 +17,8 @@
  * Shieldbreakers-StreamControl-setup.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+//Depends on common.js, easeljs, tweenjs.
+
 const xhr = new XMLHttpRequest();
 xhr.overrideMimeType('text/xml');
 let animating = false;

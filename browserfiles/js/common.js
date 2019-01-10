@@ -17,6 +17,12 @@
  * Shieldbreakers-StreamControl-setup.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+const CHAR_HEIGHT = 74;
+const CHAR_WIDTH = CHAR_HEIGHT; //assuming src imgs are quadratic
+const CHAR_CROPPED_HEIGHT = 58;
+
+let charRect = new createjs.Rectangle(0, 0, 100, CHAR_CROPPED_HEIGHT); //works if img width is <= 100
+
 function getValueFromTag (xmlDoc,tag) {
   if (xmlDoc.getElementsByTagName(tag).length != 0 ) {
     if (xmlDoc.getElementsByTagName(tag)[0].childNodes.length == 0) {
