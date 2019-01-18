@@ -17,9 +17,9 @@
  * Shieldbreakers-StreamControl-setup.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const CHAR_HEIGHT = 94;
+const CHAR_HEIGHT = 100;
 const CHAR_WIDTH = CHAR_HEIGHT; //assuming src imgs are quadratic
-const CHAR_CROPPED_HEIGHT = 58;
+const CHAR_CROPPED_HEIGHT = 56;
 
 let charRect = new createjs.Rectangle(0, 0, 100, CHAR_CROPPED_HEIGHT); //works if img width is <= 100
 
