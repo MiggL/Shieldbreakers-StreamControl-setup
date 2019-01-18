@@ -126,18 +126,19 @@
 
         board.y = -100;
 
+        animating = true;
         createjs.Tween.get(board).to({y:0},800, createjs.Ease.quintOut);
 
         createjs.Ticker.addEventListener("tick", enterFrame);
         createjs.Ticker.framerate = 60;
-
 
         stage.update();
       }
 
 
       function enterFrame(event) {
-        stage.update(event);
+        if (animating)
+          stage.update(event);
       }
 
       function pollHandler()
@@ -146,7 +147,7 @@
         if (timestamp != timestampOld) {
           doUpdate = true;
         }
-        if (!animating && doUpdate) {
+        if (doUpdate && (!animating || timestampOld == null)) {
           updateBoard();
         }
       }
