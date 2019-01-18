@@ -208,8 +208,12 @@
             pCharIcon1.removeAllChildren();
 
             if (pCharIcon1n.image.height != 0) { //image exists
+              if (pChar1.startsWith("mario")) {
+                pCharIcon1n.sourceRect = charRectTopCropped;
+              } else {
+                pCharIcon1n.sourceRect = charRect;
+              }
               pCharIcon1n.scale = CHAR_HEIGHT / pCharIcon1n.image.height;
-              pCharIcon1n.sourceRect = charRect;
               pCharIcon1.addChild(pCharIcon1n);
             }
             oldChar1 = pChar1;
@@ -225,8 +229,12 @@
             pCharIcon2.removeAllChildren();
 
             if (pCharIcon2n.image.height != 0) { //image exists
+              if (pChar2.startsWith("mario")) {
+                pCharIcon2n.sourceRect = charRectTopCropped;
+              } else {
+                pCharIcon2n.sourceRect = charRect;
+              }
               pCharIcon2n.scale = CHAR_HEIGHT / pCharIcon2n.image.height;
-              pCharIcon2n.sourceRect = charRect;
               pCharIcon2.addChild(pCharIcon2n);
             }
             oldChar2 = pChar2;
