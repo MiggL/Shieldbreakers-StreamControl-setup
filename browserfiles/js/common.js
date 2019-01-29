@@ -44,6 +44,3 @@ function getCountry(country) {
   }
   return count['value'].toUpperCase();
 }
-function getSmashChar(smashChar) {
-  return smashChar + (isNaN(parseInt(smashChar.slice(-1)))?'1':'')
-}
