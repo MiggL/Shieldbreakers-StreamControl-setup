@@ -30,15 +30,12 @@ const ROUND_MAX_WIDTH = 220;
 const ROUND_FONT_SIZE = 22;
 
 const CHAR_PATH = "images/smash_ultimate/";
-const CHAR_HEIGHT = 90;
-const CHAR_WIDTH = CHAR_HEIGHT; //assuming src imgs are quadratic
-const CHAR_CROPPED_HEIGHT = 62;
-
-const FLAG_PATH = "images/GoSquared/cropped/iso/64shiny/";
-const FLAG_WIDTH = 60;
+let CHAR_HEIGHT = 90;
+let CHAR_WIDTH = CHAR_HEIGHT; //assuming src imgs are quadratic
+let CHAR_CROPPED_HEIGHT = 62;
 
 let charRect = new createjs.Rectangle(0, 0, 100, CHAR_CROPPED_HEIGHT); //works if img width is <= 100
-let charRectTopCropped = new createjs.Rectangle(0, 14, 100, CHAR_CROPPED_HEIGHT); //used for mario
+let charRectTopCropped = new createjs.Rectangle(0, 10, 100, CHAR_CROPPED_HEIGHT); //used for mario
     
 const xhr = new XMLHttpRequest();
 xhr.overrideMimeType('text/xml');
@@ -51,6 +48,13 @@ let dynamicTexts = new Map();
 let dynamicImages = new Map();
 let paths = new Map();
 let stage;
+function initDoubles() {
+  CHAR_HEIGHT = 75;
+  CHAR_WIDTH = CHAR_HEIGHT;
+  CHAR_CROPPED_HEIGHT = 75;
+  charRect = new createjs.Rectangle(0, 0, 100, CHAR_CROPPED_HEIGHT); //works if img width is <= 100
+  charRectTopCropped = new createjs.Rectangle(0, 10, 100, CHAR_CROPPED_HEIGHT); //used for mario
+}
 function createScoreboard(board) {
   var timeout = this.window.setInterval(function() {
     pollHandler();
@@ -146,6 +150,7 @@ function updateImage(dynamicImage, name, dynImages) {
     newFileName = getCountry(newFileName);
   if (dynamicImage.name != newFileName) {
     animating = true;
+    let prevAlpha = dynamicImage.alpha;
     let bitmap = new createjs.Bitmap(path + newFileName + ".png");
     createjs.Tween.get(dynamicImage).to({alpha:0},500, createjs.Ease.quintIn).call(function() {
       dynamicImage.removeAllChildren();
@@ -157,12 +162,14 @@ function updateImage(dynamicImage, name, dynImages) {
             bitmap.sourceRect = charRect;
           }
           bitmap.scale = CHAR_HEIGHT / bitmap.image.height;
+        } else {
+          bitmap.scale = FLAG_WIDTH / bitmap.image.width;
         }
         dynamicImage.addChild(bitmap);
       }
       dynamicImage.name = newFileName;
     })
-      .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
+      .to({alpha:prevAlpha},500, createjs.Ease.quintOut).call(function() {animating = false;});
   }
 }
 
@@ -183,6 +190,9 @@ function getValueFromTag (xmlDoc,tag) {
   }
 }
 function getCountry(country) {
+  if (country.length === 0) {
+    return country;
+  }
   var count = iso.findCountryByName(country);
   if (!count)
     count = iso.findCountryByCode(country);

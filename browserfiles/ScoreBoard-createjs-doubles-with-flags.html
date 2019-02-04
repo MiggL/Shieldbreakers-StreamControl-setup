@@ -23,61 +23,30 @@
     <script src="js/easeljs-2017.10.12.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/tweenjs-2017.10.12.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/countries.js" type="text/javascript" charset="utf-8"></script>
-    <script src="js/common.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/scoreboard-updater.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
-      const flagFolder = "images/GoSquared/cropped/iso/64flat/";
-      const flagHeight = 44;
-      const flagWidth = 60 * flagHeight / 40;//assuming flag images are 60x40
-      const flagAlpha = 0.25
+      const FONT_COLOR = "#FFFFFF";
       
-      var timestampOld;
-      var timestamp;
-      var pName1;
-      var pScore1;
-      var pName2;
-      var pScore2;
-      var pChar1;
-      var pChar2;
-      var pCountry1;
-      var pCountry2;
-      var oldChar1 = "";
-      var oldChar2 = "";
-      var oldCountry1 = "";
-      var oldCountry2 = "";
-      var round;
-
-      var teammateName1;
-      var teammateName2;
-      var teammateChar1;
-      var teammateChar2;
-      var oldTeammateChar1 = "";
-      var oldTeammateChar2 = "";
-      var tpCountry1;
-      var tpCountry2;
-      var oldtpCountry1 = "";
-      var oldtpCountry2 = "";
-
-      var xmlDoc;
-
-      const xhr = new XMLHttpRequest();
-
-      var animating = false;
-      var doUpdate = false;
-
-      var stage,board,pName1t,pName2t,tName1t,tName2t,pScore1t,pScore2t,pCountry1b,pCountry2b,pFlag1,pFlag2,tpCountry1b,tpCountry2b,tpFlag1,tpFlag2,pCharIcon1,pCharIcon2,tCharIcon1,tCharIcon2,roundt;
+      const NAME_X = 546;
+      const NAME_Y = 10;
+      const NAME_MAX_WIDTH = 348;
+      const NAME_FONT_SIZE = 30;
+      
+      const CHAR_A_X = 307;
+      const CHAR_B_X = 710;
+      const CHAR_Y = 0;
+      
+      const FLAG_A_X = 361;
+      const FLAG_B_X = 665;
+      const FLAG_Y = 0;
+      const FLAG_HEIGHT = 44;
+      const FLAG_WIDTH = 60 * FLAG_HEIGHT / 40;//assuming flag images are 60x40
+      const FLAG_PATH = "images/GoSquared/cropped/iso/64flat/";
+      const FLAG_ALPHA = 0.25;
 
       function init() {
-
-        xhr.overrideMimeType('text/xml');
-
-        var timeout = this.window.setInterval(function() {
-          pollHandler();
-        }, 250);
-
-        stage = new createjs.Stage("myCanvas");
-
-        board = new createjs.Container();
-
+        initDoubles();
+        let board = new createjs.Container();
 
         scoreboard = new createjs.Bitmap("images/doubles-overlay.png");
         scoreboard.regX = 0;
@@ -85,337 +54,34 @@
 
         board.addChild(scoreboard);
 
-        pName1t = new createjs.Text("", "30px Helvetica", "#ffffff");
-        pName1t.x = 546;
-        pName1t.y = 10;
-        pName1t.maxWidth = 348;
-        pName1t.textAlign = "center";
-
-        board.addChild(pName1t);
-
-        pName2t = new createjs.Text("", "30px Helvetica", "#ffffff");
-        pName2t.x = 1920-pName1t.x;
-        pName2t.y = pName1t.y;
-        pName2t.maxWidth = pName1t.maxWidth;
-        pName2t.textAlign = "center";
-
-        board.addChild(pName2t);
+        board.addChild(newDynText("pName1", NAME_X, NAME_Y, NAME_MAX_WIDTH, NAME_FONT_SIZE, FONT_COLOR));
+        board.addChild(newMirroredDynText("pName2", "pName1"));
         
-        pFlag1 = new createjs.Container();
-        pFlag1.x = 326 + 30;
-        pFlag1.y = 0;
-        pFlag1.alpha=0;
-
-        board.addChild(pFlag1);
+        let pCountry1Container = newDynImage("pCountry1", FLAG_A_X, FLAG_Y, FLAG_PATH);
+        pCountry1Container.alpha = FLAG_ALPHA;
+        let teammateCountry1Container = newDynImage("teammateCountry1", FLAG_B_X, FLAG_Y, FLAG_PATH);
+        teammateCountry1Container.alpha = FLAG_ALPHA;
+        board.addChild(pCountry1Container);
+        board.addChild(teammateCountry1Container);
+        board.addChild(newMirroredDynImage("pCountry2", "teammateCountry1"));
+        board.addChild(newMirroredDynImage("teammateCountry2", "pCountry1"));
         
-        tpFlag1 = new createjs.Container();
-        tpFlag1.x = 695 - 30;
-        tpFlag1.y = pFlag1.y;
-        tpFlag1.alpha=0;
-
-        board.addChild(tpFlag1);
-
-        pFlag2 = new createjs.Container()
-        pFlag2.x = 1920-flagWidth-tpFlag1.x;
-        pFlag2.y = tpFlag1.y;
-        pFlag2.alpha=0;
-
-        board.addChild(pFlag2);
-
-        tpFlag2 = new createjs.Container()
-        tpFlag2.x = 1920-flagWidth-pFlag1.x;
-        tpFlag2.y = pFlag1.y;
-        tpFlag2.alpha=0;
-
-        board.addChild(tpFlag2);
-
-        pCharIcon1 = new createjs.Container();
-        pCharIcon1.x = 310;
-        pCharIcon1.y = 1;
-        pCharIcon1.alpha=0;
-
-        board.addChild(pCharIcon1);
-
-        tCharIcon2 = new createjs.Container();
-        tCharIcon2.x = 1920-CHAR_WIDTH-pCharIcon1.x;
-        tCharIcon2.y = pCharIcon1.y;
-        tCharIcon2.alpha=0;
-
-        board.addChild(tCharIcon2);
-
-        tCharIcon1 = new createjs.Container();
-        tCharIcon1.x = 710;
-        tCharIcon1.y = 1;
-        tCharIcon1.alpha=0;
-
-        board.addChild(tCharIcon1);
-
-        pCharIcon2 = new createjs.Container();
-        pCharIcon2.x = 1920-CHAR_WIDTH-tCharIcon1.x;
-        pCharIcon2.y = tCharIcon1.y;
-        pCharIcon2.alpha=0;
-
-        board.addChild(pCharIcon2);
-
-        pScore1t = new createjs.Text("", "32px Helvetica", "#ffffff");
-        pScore1t.x = 814;
-        pScore1t.y = 12;
-        pScore1t.textAlign = "center";
-
-        board.addChild(pScore1t);
-
-        pScore2t = new createjs.Text("", "32px Helvetica", "#ffffff");
-        pScore2t.x = 1920-pScore1t.x;
-        pScore2t.y = pScore1t.y;
-        pScore2t.textAlign = "center";
-
-        board.addChild(pScore2t);
-
-        roundt = new createjs.Text("", "22px Helvetica", "#ffffff");
-        roundt.x = 960;
-        roundt.y = 11;
-        roundt.maxWidth = 220;
-        roundt.textAlign = "center";
-
-        board.addChild(roundt);
-
-        stage.addChild(board);
-
-        board.y = -100;
-
-        createjs.Tween.get(board).to({y:0},800, createjs.Ease.quintOut);
-
-        createjs.Ticker.addEventListener("tick", enterFrame);
-        createjs.Ticker.framerate = 60;
-
-
-        stage.update();
-      }
-
-
-      function enterFrame(event) {
-        stage.update(event);
-      }
-
-      function pollHandler()
-      {
-        loadData();
-        if (timestamp != timestampOld) {
-          doUpdate = true;
-        }
-        if (!animating && doUpdate) {
-          updateBoard();
-        }
-      }
-
-      function loadData() {
-        xhr.open('GET', 'streamcontrol.xml');
-        xhr.send();
-        xhr.onreadystatechange = function(){
-          xmlDoc = xhr.responseXML;
-
-          if (xmlDoc != null) {
-            pName1 = getValueFromTag(xmlDoc,'pName1');
-            pName2 = getValueFromTag(xmlDoc,'pName2');
-            teammateName1 = getValueFromTag(xmlDoc,'teammateName1');
-            teammateName2 = getValueFromTag(xmlDoc,'teammateName2');
-            pScore1 = getValueFromTag(xmlDoc,'pScore1');
-            pScore2 = getValueFromTag(xmlDoc,'pScore2');
-            pCountry1 = getCountry(getValueFromTag(xmlDoc,'pCountry1'));
-            pCountry2 = getCountry(getValueFromTag(xmlDoc,'pCountry2'));
-            tpCountry1 = getCountry(getValueFromTag(xmlDoc,'teammateCountry1'));
-            tpCountry2 = getCountry(getValueFromTag(xmlDoc,'teammateCountry2'));
-            pChar1 = getValueFromTag(xmlDoc,'pChar1');
-            pChar2 = getValueFromTag(xmlDoc,'pChar2');
-            teammateChar1 = getValueFromTag(xmlDoc,'teammateChar1');
-            teammateChar2 = getValueFromTag(xmlDoc,'teammateChar2');
-            round = getValueFromTag(xmlDoc,'round');
-            timestampOld = timestamp;
-            timestamp = getValueFromTag(xmlDoc,'timestamp');
-          }
-        }
-      }
-
-      function updateBoard() {
-
-        if (pName1t.text != pName1 + (teammateName1 == ""?"":(" + " + teammateName1))) {
-          animating = true;
-          var name1x = pName1t.x;
-          createjs.Tween.get(pName1t).to({x:pScore1t.x-86,alpha:0},500, createjs.Ease.quintIn).call(function() {pName1t.text = pName1 + (teammateName1 == ""?"":(" + " + teammateName1));})
-            .to({x:name1x,alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (pName2t.text != pName2 + (teammateName2 == ""?"":(" + " + teammateName2))) {
-          animating = true;
-          var name2x = pName2t.x;
-          createjs.Tween.get(pName2t).to({x:pScore2t.x+86,alpha:0},500, createjs.Ease.quintIn).call(function() {pName2t.text = pName2 + (teammateName2 == ""?"":(" + " + teammateName2));})
-            .to({x:name2x,alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (pScore1t.text != pScore1) {
-          animating = true;
-          createjs.Tween.get(pScore1t).to({alpha:0},500, createjs.Ease.quintIn).call(function() {pScore1t.text = pScore1;})
-            .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (pScore2t.text != pScore2) {
-          animating = true;
-          createjs.Tween.get(pScore2t).to({alpha:0},500, createjs.Ease.quintIn).call(function() {pScore2t.text = pScore2;})
-            .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (oldCountry1 != pCountry1 || pFlag1.alpha == 0) {
-          animating = true;
-          var pFlag1n = new createjs.Bitmap(flagFolder + pCountry1 + ".png");
-
-          createjs.Tween.get(pFlag1).to({alpha:0},500, createjs.Ease.quintIn).call(function() {
-            pFlag1.removeAllChildren();
-
-            if (pCountry1 != "unknown") { //image exists
-              pFlag1n.scaleY = flagHeight / pFlag1n.image.height;
-              pFlag1n.scaleX = pFlag1n.scaleY;
-
-              pFlag1.addChild(pFlag1n);
-            }
-            oldCountry1 = pCountry1;
-          })
-            .to({alpha:flagAlpha},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (oldCountry2 != pCountry2 || pFlag2.alpha == 0) {
-          animating = true;
-          var pFlag2n = new createjs.Bitmap(flagFolder + pCountry2 + ".png");
-
-          createjs.Tween.get(pFlag2).to({alpha:0},500, createjs.Ease.quintIn).call(function() {
-            pFlag2.removeAllChildren();
-
-            if (pCountry2 != "unknown") { //image exists
-              pFlag2n.scaleY = flagHeight / pFlag2n.image.height;
-              pFlag2n.scaleX = pFlag2n.scaleY;
-
-              pFlag2.addChild(pFlag2n);
-            }
-            oldCountry2 = pCountry2;
-          })
-            .to({alpha:flagAlpha},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (oldtpCountry1 != tpCountry1 || tpFlag1.alpha == 0) {
-          animating = true;
-          var tpFlag1n = new createjs.Bitmap(flagFolder + tpCountry1 + ".png");
-
-          createjs.Tween.get(tpFlag1).to({alpha:0},500, createjs.Ease.quintIn).call(function() {
-            tpFlag1.removeAllChildren();
-
-            if (tpCountry1 != "unknown") { //image exists
-              tpFlag1n.scaleY = flagHeight / tpFlag1n.image.height;
-              tpFlag1n.scaleX = tpFlag1n.scaleY;
-
-              tpFlag1.addChild(tpFlag1n);
-            }
-            oldtpCountry1 = tpCountry1;
-          })
-            .to({alpha:flagAlpha},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (oldtpCountry2 != tpCountry2 || tpFlag2.alpha == 0) {
-          animating = true;
-          var tpFlag2n = new createjs.Bitmap(flagFolder + tpCountry2 + ".png");
-
-          createjs.Tween.get(tpFlag2).to({alpha:0},500, createjs.Ease.quintIn).call(function() {
-            tpFlag2.removeAllChildren();
-
-            if (tpCountry2 != "unknown") { //image exists
-              tpFlag2n.scaleY = flagHeight / tpFlag2n.image.height;
-              tpFlag2n.scaleX = tpFlag2n.scaleY;
-
-              tpFlag2.addChild(tpFlag2n);
-            }
-            oldtpCountry2 = tpCountry2;
-          })
-            .to({alpha:flagAlpha},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (oldChar1 != pChar1 || pCharIcon1.alpha == 0) {
-          animating = true;
-          var pCharIcon1n = new createjs.Bitmap("images/smash_ultimate/" + pChar1 + ".png");
-
-          createjs.Tween.get(pCharIcon1).to({alpha:0},500, createjs.Ease.quintIn).call(function() {
-            pCharIcon1.removeAllChildren();
-
-            if (pCharIcon1n.image.height != 0) { //image exists
-							pCharIcon1n.scale = CHAR_HEIGHT / pCharIcon1n.image.height;
-              pCharIcon1n.sourceRect = charRect;
-              pCharIcon1.addChild(pCharIcon1n);
-            }
-            oldChar1 = pChar1;
-          })
-            .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (oldChar2 != pChar2 || pCharIcon2.alpha == 0) {
-          animating = true;
-          var pCharIcon2n = new createjs.Bitmap("images/smash_ultimate/" + pChar2 + ".png");
-
-          createjs.Tween.get(pCharIcon2).to({alpha:0},500, createjs.Ease.quintIn).call(function() {
-            pCharIcon2.removeAllChildren();
-
-            if (pCharIcon2n.image.height != 0) { //image exists
-							pCharIcon2n.scale = CHAR_HEIGHT / pCharIcon2n.image.height;
-              pCharIcon2n.sourceRect = charRect;
-              pCharIcon2.addChild(pCharIcon2n);
-            }
-            oldChar2 = pChar2;
-          })
-            .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (oldTeammateChar1 != teammateChar1 || tCharIcon1.alpha == 0) {
-          animating = true;
-          var tCharIcon1n = new createjs.Bitmap("images/smash_ultimate/" + teammateChar1 + ".png");
-
-          createjs.Tween.get(tCharIcon1).to({alpha:0},500, createjs.Ease.quintIn).call(function() {
-            tCharIcon1.removeAllChildren();
-
-            if (tCharIcon1n.image.height != 0) { //image exists
-							tCharIcon1n.scale = CHAR_HEIGHT / tCharIcon1n.image.height;
-              tCharIcon1n.sourceRect = charRect;
-              tCharIcon1.addChild(tCharIcon1n);
-            }
-            oldTeammateChar1 = teammateChar1;
-          })
-            .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (oldTeammateChar2 != teammateChar2 || tCharIcon2.alpha == 0) {
-          animating = true;
-          var tCharIcon2n = new createjs.Bitmap("images/smash_ultimate/" + teammateChar2 + ".png");
-
-          createjs.Tween.get(tCharIcon2).to({alpha:0},500, createjs.Ease.quintIn).call(function() {
-            tCharIcon2.removeAllChildren();
-
-            if (tCharIcon2n.image.height != 0) { //image exists
-							tCharIcon2n.scale = CHAR_HEIGHT / tCharIcon2n.image.height;
-              tCharIcon2n.sourceRect = charRect;
-              tCharIcon2.addChild(tCharIcon2n);
-            }
-            oldTeammateChar2 = teammateChar2;
-          })
-            .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (roundt.text != round) {
-          animating = true;
-          createjs.Tween.get(roundt).to({alpha:0},500, createjs.Ease.quintIn).call(function() {roundt.text = round;})
-            .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        doUpdate = false;
+        board.addChild(newDynImage("pChar1", CHAR_A_X, CHAR_Y, CHAR_PATH));
+        board.addChild(newDynImage("teammateChar1", CHAR_B_X, CHAR_Y, CHAR_PATH));
+        board.addChild(newMirroredDynImage("pChar2", "teammateChar1"));
+        board.addChild(newMirroredDynImage("teammateChar2", "pChar1"));
+
+        board.addChild(newDynText("pScore1", SCORE_X, SCORE_Y, SCORE_MAX_WIDTH, SCORE_FONT_SIZE, FONT_COLOR));
+        board.addChild(newMirroredDynText("pScore2", "pScore1"));
+
+        board.addChild(newDynText("round", ROUND_X, ROUND_Y, ROUND_MAX_WIDTH, ROUND_FONT_SIZE, FONT_COLOR));
+        
+        createScoreboard(board);
       }
     </script>
   </head>
   <body onLoad="init()" style="margin:0px;">
-    <canvas id="myCanvas" width="1920" height="1080">
+    <canvas id="myCanvas" width="1920" height="100">
       canvas
     </canvas>
   </body>
