@@ -42,7 +42,7 @@
       const FLAG_HEIGHT = 44;
       const FLAG_WIDTH = 60 * FLAG_HEIGHT / 40;//assuming flag images are 60x40
       const FLAG_PATH = "images/GoSquared/cropped/iso/64flat/";
-      const FLAG_ALPHA = 0.25;
+      const FLAG_ALPHA = 0.2;
 
       function init() {
         initDoubles();
@@ -54,8 +54,12 @@
 
         board.addChild(scoreboard);
 
-        board.addChild(newDynText("pName1", NAME_X, NAME_Y, NAME_MAX_WIDTH, NAME_FONT_SIZE, FONT_COLOR));
-        board.addChild(newMirroredDynText("pName2", "pName1"));
+        let name1Container = newDynText("pName1", NAME_X, NAME_Y, NAME_MAX_WIDTH, NAME_FONT_SIZE, FONT_COLOR);
+        name1Container.name = "teammateName1";
+        board.addChild(name1Container);
+        let name2Container = newMirroredDynText("pName2", "pName1");
+        name2Container.name = "teammateName2";
+        board.addChild(name2Container);
         
         let pCountry1Container = newDynImage("pCountry1", FLAG_A_X, FLAG_Y, FLAG_PATH);
         pCountry1Container.alpha = FLAG_ALPHA;

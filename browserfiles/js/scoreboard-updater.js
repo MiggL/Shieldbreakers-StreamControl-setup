@@ -131,6 +131,9 @@ function pollHandler() {
 
 function updateText(dynamicText, name, dynTexts) {
   let newText = getValueFromTag(xhr.responseXML, name);
+  if (dynamicText.name != null) {
+      newText = getTeamName(newText, getValueFromTag(xhr.responseXML, dynamicText.name));
+  }
   if (dynamicText.text != newText) {
     animating = true;
     createjs.Tween.get(dynamicText)
@@ -200,4 +203,7 @@ function getCountry(country) {
     return "unknown";
   }
   return count['value'].toUpperCase();
+}
+function getTeamName(name1, name2) {
+  return name1 + (name2==""?"":(" / "+name2));
 }
