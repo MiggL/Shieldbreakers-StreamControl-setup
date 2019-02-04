@@ -23,41 +23,20 @@
     <script src="js/easeljs-2017.10.12.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/tweenjs-2017.10.12.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/countries.js" type="text/javascript" charset="utf-8"></script>
-    <script src="js/common.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/scoreboard-updater.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
-      var timestampOld;
-      var timestamp;
-      var pName1;
-      var pScore1;
-      var pName2;
-      var pScore2;
-      var pChar1;
-      var pChar2;
-      var oldChar1 = "";
-      var oldChar2 = "";
-      var round;
-
-      var xmlDoc;
-
-      var xhr = new XMLHttpRequest();
-
-      var animating = false;
-      var doUpdate = false;
-
-      var stage,board,pName1t,pName2t,pScore1t,pScore2t,pCharIcon1,pCharIcon2,roundt;
+      const FONT_COLOR = "#FFFFFF";
+      
+      const NAME_X = 568;
+      const NAME_Y = 10;
+      const NAME_MAX_WIDTH = 288;
+      const NAME_FONT_SIZE = 30;
+      
+      const CHAR_X = 710;
+      const CHAR_Y = 0;
 
       function init() {
-
-        xhr.overrideMimeType('text/xml');
-
-        var timeout = this.window.setInterval(function() {
-          pollHandler();
-        }, 250);
-
-        stage = new createjs.Stage("myCanvas");
-
-        board = new createjs.Container();
-
+        let board = new createjs.Container();
 
         scoreboard = new createjs.Bitmap("images/singles-overlay.png");
         scoreboard.regX = 0;
@@ -65,195 +44,23 @@
 
         board.addChild(scoreboard);
 
-        pName1t = new createjs.Text("", "30px Helvetica", "#ffffff");
-        pName1t.x = 568;
-        pName1t.y = 10;
-        pName1t.maxWidth = 288;
-        pName1t.textAlign = "center";
-        pName1t.textBaseline = "hanging";
+        board.addChild(newDynText("pName1", NAME_X, NAME_Y, NAME_MAX_WIDTH, NAME_FONT_SIZE, FONT_COLOR));
+        board.addChild(newMirroredDynText("pName2", "pName1"));
+        
+        board.addChild(newDynImage("pChar1", CHAR_X, CHAR_Y, CHAR_PATH));
+        board.addChild(newMirroredDynImage("pChar2", "pChar1"));
 
-        board.addChild(pName1t);
+        board.addChild(newDynText("pScore1", SCORE_X, SCORE_Y, SCORE_MAX_WIDTH, SCORE_FONT_SIZE, FONT_COLOR));
+        board.addChild(newMirroredDynText("pScore2", "pScore1"));
 
-        pName2t = new createjs.Text("", "30px Helvetica", "#ffffff");
-        pName2t.x = 1920-pName1t.x;
-        pName2t.y = 10;
-        pName2t.maxWidth = pName1t.maxWidth;
-        pName2t.textAlign = "center";
-        pName2t.textBaseline = "hanging";
-
-        board.addChild(pName2t);
-
-        pCharIcon1 = new createjs.Container();
-        pCharIcon1.x = 710;
-        pCharIcon1.y = 0;
-        pCharIcon1.alpha=0;
-
-        board.addChild(pCharIcon1);
-
-        pCharIcon2 = new createjs.Container();
-        pCharIcon2.x = 1920-CHAR_WIDTH-pCharIcon1.x;
-        pCharIcon2.y = pCharIcon1.y;
-        pCharIcon2.alpha=0;
-
-        board.addChild(pCharIcon2);
-
-        pScore1t = new createjs.Text("", "32px Helvetica", "#ffffff");
-        pScore1t.x = 814;
-        pScore1t.y = 12;
-        pScore1t.textAlign = "center";
-        pScore1t.textBaseline = "hanging";
-
-        board.addChild(pScore1t);
-
-        pScore2t = new createjs.Text("", "32px Helvetica", "#ffffff");
-        pScore2t.x = 1920-pScore1t.x;
-        pScore2t.y = pScore1t.y;
-        pScore2t.textAlign = "center";
-        pScore2t.textBaseline = "hanging";
-
-        board.addChild(pScore2t);
-
-        roundt = new createjs.Text("", "22px Helvetica", "#ffffff");
-        roundt.x = 960;
-        roundt.y = 11;
-        roundt.maxWidth = 220;
-        roundt.textAlign = "center";
-        roundt.textBaseline = "hanging";
-
-        board.addChild(roundt);
-
-        stage.addChild(board);
-
-        board.y = -100;
-
-        animating = true;
-        createjs.Tween.get(board).to({y:0},800, createjs.Ease.quintOut);
-
-        createjs.Ticker.addEventListener("tick", enterFrame);
-        createjs.Ticker.framerate = 60;
-
-        stage.update();
-      }
-
-
-      function enterFrame(event) {
-        if (animating)
-          stage.update(event);
-      }
-
-      function pollHandler()
-      {
-        loadData();
-        if (timestamp != timestampOld) {
-          doUpdate = true;
-        }
-        if (doUpdate && (!animating || timestampOld == null)) {
-          updateBoard();
-        }
-      }
-
-      function loadData() {
-        xhr.open('GET', 'streamcontrol.xml');
-        xhr.send();
-        xhr.onreadystatechange = function(){
-          xmlDoc = xhr.responseXML;
-
-          if (xmlDoc != null) {
-            pName1 = getValueFromTag(xmlDoc,'pName1');
-            pName2 = getValueFromTag(xmlDoc,'pName2');
-            pScore1 = getValueFromTag(xmlDoc,'pScore1');
-            pScore2 = getValueFromTag(xmlDoc,'pScore2');
-            pChar1 = getValueFromTag(xmlDoc,'pChar1');
-            pChar2 = getValueFromTag(xmlDoc,'pChar2');
-            round = getValueFromTag(xmlDoc,'round');
-            timestampOld = timestamp;
-            timestamp = getValueFromTag(xmlDoc,'timestamp');
-          }
-        }
-      }
-
-      function updateBoard() {
-
-        if (pName1t.text != pName1) {
-          animating = true;
-          var name1x = pName1t.x;
-          createjs.Tween.get(pName1t).to({x:pScore1t.x-86,alpha:0},500, createjs.Ease.quintIn).call(function() {pName1t.text = pName1;})
-            .to({x:name1x,alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (pName2t.text != pName2) {
-          animating = true;
-          var name2x = pName2t.x;
-          createjs.Tween.get(pName2t).to({x:pScore2t.x+86,alpha:0},500, createjs.Ease.quintIn).call(function() {pName2t.text = pName2;})
-            .to({x:name2x,alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (pScore1t.text != pScore1) {
-          animating = true;
-          createjs.Tween.get(pScore1t).to({alpha:0},500, createjs.Ease.quintIn).call(function() {pScore1t.text = pScore1;})
-            .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (pScore2t.text != pScore2) {
-          animating = true;
-          createjs.Tween.get(pScore2t).to({alpha:0},500, createjs.Ease.quintIn).call(function() {pScore2t.text = pScore2;})
-            .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (oldChar1 != pChar1 || pCharIcon1.alpha == 0) {
-          animating = true;
-          var pCharIcon1n = new createjs.Bitmap("images/smash_ultimate/" + pChar1 + ".png");
-
-          createjs.Tween.get(pCharIcon1).to({alpha:0},500, createjs.Ease.quintIn).call(function() {
-            pCharIcon1.removeAllChildren();
-
-            if (pCharIcon1n.image.height != 0) { //image exists
-              if (pChar1.startsWith("mario")) {
-                pCharIcon1n.sourceRect = charRectTopCropped;
-              } else {
-                pCharIcon1n.sourceRect = charRect;
-              }
-              pCharIcon1n.scale = CHAR_HEIGHT / pCharIcon1n.image.height;
-              pCharIcon1.addChild(pCharIcon1n);
-            }
-            oldChar1 = pChar1;
-          })
-            .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (oldChar2 != pChar2 || pCharIcon2.alpha == 0) {
-          animating = true;
-          var pCharIcon2n = new createjs.Bitmap("images/smash_ultimate/" + pChar2 + ".png");
-
-          createjs.Tween.get(pCharIcon2).to({alpha:0},500, createjs.Ease.quintIn).call(function() {
-            pCharIcon2.removeAllChildren();
-
-            if (pCharIcon2n.image.height != 0) { //image exists
-              if (pChar2.startsWith("mario")) {
-                pCharIcon2n.sourceRect = charRectTopCropped;
-              } else {
-                pCharIcon2n.sourceRect = charRect;
-              }
-              pCharIcon2n.scale = CHAR_HEIGHT / pCharIcon2n.image.height;
-              pCharIcon2.addChild(pCharIcon2n);
-            }
-            oldChar2 = pChar2;
-          })
-            .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        if (roundt.text != round) {
-          animating = true;
-          createjs.Tween.get(roundt).to({alpha:0},500, createjs.Ease.quintIn).call(function() {roundt.text = round;})
-            .to({alpha:1},500, createjs.Ease.quintOut).call(function() {animating = false;});
-        }
-
-        doUpdate = false;
+        board.addChild(newDynText("round", ROUND_X, ROUND_Y, ROUND_MAX_WIDTH, ROUND_FONT_SIZE, FONT_COLOR));
+        
+        createScoreboard(board);
       }
     </script>
   </head>
   <body onLoad="init()" style="margin:0px;">
-    <canvas id="myCanvas" width="1920" height="1080">
+    <canvas id="myCanvas" width="1920" height="100">
       canvas
     </canvas>
   </body>
