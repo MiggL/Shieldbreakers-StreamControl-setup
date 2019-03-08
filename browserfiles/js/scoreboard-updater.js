@@ -35,7 +35,7 @@ let CHAR_WIDTH = CHAR_HEIGHT; //assuming src imgs are quadratic
 let CHAR_CROPPED_HEIGHT = 62;
 
 let charRect = new createjs.Rectangle(0, 0, 100, CHAR_CROPPED_HEIGHT); //works if img width is <= 100
-let charRectTopCropped = new createjs.Rectangle(0, 10, 100, CHAR_CROPPED_HEIGHT); //used for mario
+let charRectTopCropped = new createjs.Rectangle(0, 10, 100, CHAR_CROPPED_HEIGHT); //used for mario & meta knight
     
 const xhr = new XMLHttpRequest();
 xhr.overrideMimeType('text/xml');
@@ -53,7 +53,7 @@ function initDoubles() {
   CHAR_WIDTH = CHAR_HEIGHT;
   CHAR_CROPPED_HEIGHT = 75;
   charRect = new createjs.Rectangle(0, 0, 100, CHAR_CROPPED_HEIGHT); //works if img width is <= 100
-  charRectTopCropped = new createjs.Rectangle(0, 10, 100, CHAR_CROPPED_HEIGHT); //used for mario
+  charRectTopCropped = new createjs.Rectangle(0, 10, 100, CHAR_CROPPED_HEIGHT); //used for mario & meta knight
 }
 function createScoreboard(board) {
   var timeout = this.window.setInterval(function() {
@@ -149,7 +149,7 @@ function updateText(dynamicText, name, dynTexts) {
 function updateImage(dynamicImage, name, dynImages) {
   let path = paths.get(name);
   let newFileName = getValueFromTag(xhr.responseXML, name);
-  if (path == FLAG_PATH)
+  if (typeof FLAG_PATH !== 'undefined' && path == FLAG_PATH)
     newFileName = getCountry(newFileName);
   if (dynamicImage.name != newFileName) {
     animating = true;
@@ -159,7 +159,7 @@ function updateImage(dynamicImage, name, dynImages) {
       dynamicImage.removeAllChildren();
       if (bitmap.image.height != 0) { //image exists
         if (path == CHAR_PATH) {
-          if (newFileName.startsWith("mario")) {
+          if (newFileName.startsWith("mario") || newFileName.startsWith("metaknight")) {
             bitmap.sourceRect = charRectTopCropped;
           } else {
             bitmap.sourceRect = charRect;
