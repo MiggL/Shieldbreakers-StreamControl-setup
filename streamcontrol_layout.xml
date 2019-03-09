@@ -33,7 +33,8 @@
  <tab name="Load from challonge">
      <challonge x="20" y="0" width="400" height="280"
                 playerOneWidget="pName1" playerTwoWidget="pName2"
-                bracketWidget="contest" tournamentStageWidget="round">
+                bracketWidget="contest" tournamentStageWidget="round"
+                clearWidgets="pChar1,pChar2,pScore1,pScore2">
          <grandFinal p1name="gfp1" p1score="gfp1s" p2name="gfp2" p2score="gfp2s" />
          <grandFinalReset p1name="gf2p1" p1score="gf2p1s" p2name="gf2p2" p2score="gf2p2s" />
          <winnersFinal p1name="wfp1" p1score="wfp1s" p2name="wfp2" p2score="wfp2s" />

@@ -1,0 +1,28 @@
+<!DOCTYPE StreamControlLayout>
+<!-- Smallest width for lineEdit = ~38 -->
+<layout width="500" height="400" tabbed="1">
+ <tab name="smash.gg/Scoreboard">
+  <lineEdit id="contest" x="140" y="9" width="116" height="10" /><!--hiding behind smashgg widget-->
+  <smashgg x="0" y="0" width="400" height="280"
+            playerOneWidget="pName1" playerTwoWidget="pName2"
+            playerOneCountryWidget="pCountry1" playerTwoCountryWidget="pCountry2"
+            bracketWidget="contest" tournamentStageWidget="round"
+            clearWidgets="pChar1,pChar2,pScore1,pScore2">
+  </smashgg>
+  
+  <lineEdit id="pName1" x="10" y="244" width="130" height="20" dataSet="players.csv" >Player 1</lineEdit>
+  <lineEdit id="pCountry1" x="144" y="244" width="38" height="20" dataSet="players.csv" dataField="2" master="pName1">Country</lineEdit>
+  <lineEdit id="pChar1" x="186" y="244" width="80" height="20" dataSet="players.csv" dataField="3" master="pName1">Char</lineEdit>
+  <spinBox id="pScore1" x="270" y="243" width="40" height="28" maximum="999" />
+  
+  <lineEdit id="pName2" x="10" y="272" width="130" height="20" dataSet="players.csv" >Player 2</lineEdit>
+  <lineEdit id="pCountry2" x="144" y="272" width="38" height="20" dataSet="players.csv" dataField="2" master="pName2" >Country</lineEdit>
+  <lineEdit id="pChar2" x="186" y="272" width="80" height="20" dataSet="players.csv" dataField="3" master="pName2">Char</lineEdit>
+  <spinBox id="pScore2" x="270" y="271" width="40" height="28" maximum="999" />
+  
+  <button type="reset" x="400" y="171" width="60" height="26" tooltip="Set Scores to 0" id="reset"
+          reset="pScore1,pScore2">0 - 0</button>
+  <button type="swap" x="360" y="260" width="60" height="23" tooltip="Swap Players, Characters, and Scores" id="swap" swapSet1="pName1,pScore1,pCountry1,pChar1" swapSet2="pName2,pScore2,pCountry2,pChar2">Swap</button>
+  <lineEdit id="round" x="10" y="300" width="300" height="20">Round</lineEdit>
+ </tab>
+</layout>

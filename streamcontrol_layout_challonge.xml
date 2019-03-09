@@ -5,7 +5,8 @@
   <lineEdit id="contest" x="140" y="9" width="116" height="10" /><!--hiding behind challonge widget-->
   <challonge x="0" y="0" width="400" height="280"
             playerOneWidget="pName1" playerTwoWidget="pName2"
-            bracketWidget="contest" tournamentStageWidget="round">
+            bracketWidget="contest" tournamentStageWidget="round"
+            clearWidgets="pChar1,pChar2,pScore1,pScore2">
     <grandFinal p1name="gfp1" p1score="gfp1s" p2name="gfp2" p2score="gfp2s" />
     <grandFinalReset p1name="gf2p1" p1score="gf2p1s" p2name="gf2p2" p2score="gf2p2s" />
     <winnersFinal p1name="wfp1" p1score="wfp1s" p2name="wfp2" p2score="wfp2s" />
@@ -29,7 +30,7 @@
   
   <button type="reset" x="400" y="171" width="60" height="26" tooltip="Set Scores to 0" id="reset"
           reset="pScore1,pScore2">0 - 0</button>
-  <button type="swap" x="360" y="260" width="60" height="23" tooltip="Swap Players, Characters, and Scores" id="swap" swapSet1="pName1,pScore1,pCountry1,pChar1" swapSet2="pName2,pScore2,pCountry2,pChar2">Swap</button>
+  <button type="swap" x="360" y="260" width="60" height="23" tooltip="Swap Players, Characters, and Scores" id="swap" swapSet1="pName1,pScore1,pChar1" swapSet2="pName2,pScore2,pChar2">Swap</button>
   <lineEdit id="round" x="10" y="300" width="300" height="20">Round</lineEdit>
  </tab>
  <tab name="Top 8 Bracket">
