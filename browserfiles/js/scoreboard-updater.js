@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Miguel Müller
+ * Copyright 2018-2019 Miguel Müller
  * 
  * This file is part of Shieldbreakers-StreamControl-setup.
  *
@@ -35,9 +35,9 @@ let CHAR_WIDTH = CHAR_HEIGHT; //assuming src imgs are quadratic
 let CHAR_CROPPED_HEIGHT = 62;
 
 let charRect = new createjs.Rectangle(0, 0, 100, CHAR_CROPPED_HEIGHT); //works if img width is <= 100
-let charRectTopCropped = new createjs.Rectangle(0, 10, 100, CHAR_CROPPED_HEIGHT); //used to make the characters in lowChars more visible
+let charRectTopCropped = new createjs.Rectangle(0, 16, 100, CHAR_CROPPED_HEIGHT); //used to make the characters in lowChars more visible
 
-const lowChars = ["mario", "metaknight", "pichu"];
+const lowChars = ["mario", "metaknight", "pichu", "inkling", "iceclimbers"];
     
 const xhr = new XMLHttpRequest();
 xhr.overrideMimeType('text/xml');
@@ -73,7 +73,7 @@ function createScoreboard(board) {
 
   stage.update();
 }
-function newDynText(name, x, y, maxWidth, fontsize, fontcolor) {
+function newDynText(name, x, y, maxWidth, fontsize, fontcolor, textAlign = "center") {
   let dynamicText = new createjs.Text(
     "",
     `${fontsize}px Helvetica`,
@@ -82,7 +82,7 @@ function newDynText(name, x, y, maxWidth, fontsize, fontcolor) {
   dynamicText.x = x;
   dynamicText.y = y;
   dynamicText.maxWidth = maxWidth;
-  dynamicText.textAlign = "center";
+  dynamicText.textAlign = textAlign;
   dynamicText.textBaseline = "hanging";
   dynamicTexts.set(name, dynamicText);
   return dynamicText;
@@ -90,6 +90,10 @@ function newDynText(name, x, y, maxWidth, fontsize, fontcolor) {
 function newMirroredDynText(name, mirrorName) {
   let dynamicText = dynamicTexts.get(mirrorName).clone();
   dynamicText.x = document.getElementById("myCanvas").width - dynamicText.x;
+  if (dynamicText.textAlign == "right")
+    dynamicText.textAlign = "left";
+  else if (dynamicText.textAlign == "left")
+    dynamicText.textAlign = "right";
   dynamicTexts.set(name, dynamicText);
   return dynamicText;
 }

@@ -29,6 +29,17 @@
   <label x="10" y="149" width="46" height="13">Round</label>
   <lineEdit id="contest" x="60" y="115" width="321" height="20" />
   <lineEdit id="round" x="60" y="145" width="321" height="20"/>
+  
+  <label x="40" y="200" width="100" height="13">Commentator 1</label>
+  <label x="260" y="200" width="100" height="13">Commentator 2</label>
+  <label x="10" y="220" width="50" height="13">Name</label>
+  <label x="10" y="250" width="50" height="13">Twitter</label>
+  <lineEdit id="comm1name" x="65" y="218" width="121" height="20" />
+  <lineEdit id="comm1twit" x="65" y="248" width="121" height="20"/>
+  <label x="230" y="220" width="50" height="13">Name</label>
+  <label x="230" y="250" width="50" height="13">Twitter</label>
+  <lineEdit id="comm2name" x="285" y="218" width="121" height="20" />
+  <lineEdit id="comm2twit" x="285" y="248" width="121" height="20"/>
  </tab>
  <tab name="Load from challonge">
      <challonge x="20" y="0" width="400" height="280"
