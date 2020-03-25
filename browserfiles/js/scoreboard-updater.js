@@ -1,5 +1,5 @@
 /**
- * Copyright 2018-2019 Miguel Müller
+ * Copyright 2018, 2019, 2020 Miguel Müller
  * 
  * This file is part of Shieldbreakers-StreamControl-setup.
  *
@@ -40,7 +40,7 @@ let charRectTopCropped = new createjs.Rectangle(0, 16, 100, CHAR_CROPPED_HEIGHT)
 const lowChars = ["mario", "metaknight", "pichu", "inkling", "iceclimbers"];
     
 const xhr = new XMLHttpRequest();
-xhr.overrideMimeType('text/xml');
+xhr.responseType = 'json';
 let animating = false;
 let doUpdate = false;
 
@@ -116,17 +116,16 @@ function newMirroredDynImage(name, mirrorName) {
 }
 
 function pollHandler() {
-  xhr.open('GET', 'streamcontrol.xml');
+  xhr.open('GET', 'streamcontrol.json');
   xhr.send();
-  xhr.onreadystatechange = function() {
-    let xmlDoc = xhr.responseXML;
-    if (xmlDoc != null) {
+  xhr.onload = () => {
+    if (xhr.response) {
       timestampOld = timestamp;
-      timestamp = getValueFromTag(xmlDoc, 'timestamp');
-      if (timestamp != timestampOld) {
+      timestamp = xhr.response.timestamp;
+      if (timestamp !== timestampOld) {
         doUpdate = true;
       }
-      if (doUpdate && (!animating || timestampOld == null)) {
+      if (doUpdate && (!animating || timestampOld === undefined)) {
         dynamicTexts.forEach(updateText);
         dynamicImages.forEach(updateImage);
         doUpdate = false;
@@ -136,9 +135,9 @@ function pollHandler() {
 }
 
 function updateText(dynamicText, name, dynTexts) {
-  let newText = getValueFromTag(xhr.responseXML, name);
+  let newText = xhr.response[name];
   if (dynamicText.name != null) {
-      newText = getTeamName(newText, getValueFromTag(xhr.responseXML, dynamicText.name));
+      newText = getTeamName(newText, xhr.response[dynamicText.name]);
   }
   if (dynamicText.text != newText) {
     animating = true;
@@ -154,7 +153,7 @@ function updateText(dynamicText, name, dynTexts) {
 
 function updateImage(dynamicImage, name, dynImages) {
   let path = paths.get(name);
-  let newFileName = getValueFromTag(xhr.responseXML, name);
+  let newFileName = xhr.response[name];
   if (typeof FLAG_PATH !== 'undefined' && path == FLAG_PATH)
     newFileName = getCountry(newFileName);
   if (dynamicImage.name != newFileName) {
@@ -187,17 +186,6 @@ function enterFrame(event) {
     stage.update(event);
 }
 
-function getValueFromTag (xmlDoc,tag) {
-  if (xmlDoc.getElementsByTagName(tag).length != 0 ) {
-    if (xmlDoc.getElementsByTagName(tag)[0].childNodes.length == 0) {
-      return '';
-    } else {
-      return xmlDoc.getElementsByTagName(tag)[0].childNodes[0].nodeValue;
-    }
-  } else {
-    return '';
-  }
-}
 function getCountry(country) {
   if (country.length === 0) {
     return country;

@@ -1,7 +1,7 @@
 <!DOCTYPE StreamControl>
 <settings>
  <altHotkeyHandling>0</altHotkeyHandling>
- <format>1</format>
+ <format>2</format>
  <layoutPath>streamcontrol_layout.xml</layoutPath>
  <outputPath>browserfiles/</outputPath>
  <useCDATA>0</useCDATA>

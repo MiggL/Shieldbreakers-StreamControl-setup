@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Miguel Müller
+ * Copyright 2018, 2019, 2020 Miguel Müller
  * 
  * This file is part of Shieldbreakers-StreamControl-setup.
  *
@@ -20,7 +20,7 @@
 //Depends on common.js, easeljs, tweenjs.
 
 const xhr = new XMLHttpRequest();
-xhr.overrideMimeType('text/xml');
+xhr.responseType = 'json';
 let animating = false;
 let doUpdate = false;
 
@@ -49,17 +49,16 @@ function addMirroredDynamicText(name, mirrorName) {
 }
 
 function pollHandler() {
-  xhr.open('GET', 'streamcontrol.xml');
+  xhr.open('GET', 'streamcontrol.json');
   xhr.send();
-  xhr.onreadystatechange = function() {
-    let xmlDoc = xhr.responseXML;
-    if (xmlDoc != null) {
+  xhr.onload = () => {
+    if (xhr.response) {
       timestampOld = timestamp;
-      timestamp = getValueFromTag(xmlDoc, 'timestamp');
-      if (timestamp != timestampOld) {
+      timestamp = xhr.response.timestamp;
+      if (timestamp !== timestampOld) {
         doUpdate = true;
       }
-      if (!animating && doUpdate) {
+      if (doUpdate && (!animating || timestampOld === undefined)) {
         dynamicTexts.forEach(updateText);
         doUpdate = false;
       }
@@ -68,7 +67,7 @@ function pollHandler() {
 }
 
 function updateText(dynamicText, name, dynTexts) {
-  let newText = getValueFromTag(xhr.responseXML, name);
+  let newText = xhr.response[name];
   if (dynamicText.text != newText) {
     animating = true;
     createjs.Tween.get(dynamicText)
