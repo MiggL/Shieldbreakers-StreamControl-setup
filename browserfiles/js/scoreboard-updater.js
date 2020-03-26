@@ -46,9 +46,9 @@ let doUpdate = false;
 
 let timestamp;
 let timestampOld;
-let dynamicTexts = new Map();
-let dynamicImages = new Map();
-let paths = new Map();
+const dynamicTexts = new Map();
+const dynamicImages = new Map();
+const paths = new Map();
 let stage;
 function initDoubles() {
   CHAR_HEIGHT = 75;
@@ -58,9 +58,7 @@ function initDoubles() {
   charRectTopCropped = new createjs.Rectangle(0, 10, 100, CHAR_CROPPED_HEIGHT); //used to make the characters in lowChars more visible
 }
 function createScoreboard(board) {
-  var timeout = this.window.setInterval(function() {
-    pollHandler();
-  }, 250);
+  this.window.setInterval(pollHandler, 250);
 
   stage = new createjs.Stage("myCanvas");
   board.y = -100;
@@ -74,7 +72,7 @@ function createScoreboard(board) {
   stage.update();
 }
 function newDynText(name, x, y, maxWidth, fontsize, fontcolor, textAlign = "center") {
-  let dynamicText = new createjs.Text(
+  const dynamicText = new createjs.Text(
     "",
     `${fontsize}px Helvetica`,
     fontcolor
@@ -88,7 +86,7 @@ function newDynText(name, x, y, maxWidth, fontsize, fontcolor, textAlign = "cent
   return dynamicText;
 }
 function newMirroredDynText(name, mirrorName) {
-  let dynamicText = dynamicTexts.get(mirrorName).clone();
+  const dynamicText = dynamicTexts.get(mirrorName).clone();
   dynamicText.x = document.getElementById("myCanvas").width - dynamicText.x;
   if (dynamicText.textAlign == "right")
     dynamicText.textAlign = "left";
@@ -98,7 +96,7 @@ function newMirroredDynText(name, mirrorName) {
   return dynamicText;
 }
 function newDynImage(name, x, y, path) {
-  let dynamicImage = new createjs.Container();
+  const dynamicImage = new createjs.Container();
   dynamicImage.x = x;
   dynamicImage.y = y;
   dynamicImage.name = "";
@@ -107,8 +105,8 @@ function newDynImage(name, x, y, path) {
   return dynamicImage;
 }
 function newMirroredDynImage(name, mirrorName) {
-  let dynamicImage = dynamicImages.get(mirrorName).clone();
-  let path = paths.get(mirrorName);
+  const dynamicImage = dynamicImages.get(mirrorName).clone();
+  const path = paths.get(mirrorName);
   dynamicImage.x = document.getElementById("myCanvas").width - (path==CHAR_PATH?CHAR_WIDTH:FLAG_WIDTH) - dynamicImage.x;
   paths.set(name, paths.get(mirrorName));
   dynamicImages.set(name, dynamicImage);
@@ -139,7 +137,7 @@ function updateText(dynamicText, name, dynTexts) {
   if (dynamicText.name != null) {
       newText = getTeamName(newText, xhr.response[dynamicText.name]);
   }
-  if (dynamicText.text != newText) {
+  if (dynamicText.text !== newText) {
     animating = true;
     createjs.Tween.get(dynamicText)
       .to({alpha:0},500,createjs.Ease.quintIn)
@@ -152,23 +150,19 @@ function updateText(dynamicText, name, dynTexts) {
 }
 
 function updateImage(dynamicImage, name, dynImages) {
-  let path = paths.get(name);
+  const path = paths.get(name);
   let newFileName = xhr.response[name];
   if (typeof FLAG_PATH !== 'undefined' && path == FLAG_PATH)
     newFileName = getCountry(newFileName);
-  if (dynamicImage.name != newFileName) {
+  if (dynamicImage.name !== newFileName) {
     animating = true;
-    let prevAlpha = dynamicImage.alpha;
-    let bitmap = new createjs.Bitmap(path + newFileName + ".png");
+    const prevAlpha = dynamicImage.alpha;
+    const bitmap = new createjs.Bitmap(path + newFileName + ".png");
     createjs.Tween.get(dynamicImage).to({alpha:0},500, createjs.Ease.quintIn).call(function() {
       dynamicImage.removeAllChildren();
       if (bitmap.image.height != 0) { //image exists
-        if (path == CHAR_PATH) {
-          if (lowChar(newFileName)) {
-            bitmap.sourceRect = charRectTopCropped;
-          } else {
-            bitmap.sourceRect = charRect;
-          }
+        if (path === CHAR_PATH) {
+          bitmap.sourceRect = lowChar(newFileName) ? charRectTopCropped : charRect;
           bitmap.scale = CHAR_HEIGHT / bitmap.image.height;
         } else {
           bitmap.scale = FLAG_WIDTH / bitmap.image.width;
@@ -190,22 +184,12 @@ function getCountry(country) {
   if (country.length === 0) {
     return country;
   }
-  var count = iso.findCountryByName(country);
-  if (!count)
-    count = iso.findCountryByCode(country);
-  if (!count) {
-    return "unknown";
-  }
-  return count['value'].toUpperCase();
+  const countryObj = iso.findCountryByName(country) || iso.findCountryByCode(country);
+  return countryObj ? countryObj.value.toUpperCase() : 'unknown';
 }
 function getTeamName(name1, name2) {
   return name1 + (name2==""?"":(" / "+name2));
 }
 function lowChar(charFileName) {
-  for (var i = 0; i < lowChars.length; i++) {
-    if (charFileName.startsWith(lowChars[i])) {
-      return true;
-    }
-  }
-  return false;
+  return lowChars.includes(charFileName.split(/[1-9]/)[0]);
 }

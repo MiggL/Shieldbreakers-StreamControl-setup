@@ -34,7 +34,7 @@
       var stage;
 
       function newMatch(matchtag, x, y) {
-        let match = new createjs.Container();
+        const match = new createjs.Container();
         match.x = x;
         match.y = y;
 
@@ -47,12 +47,10 @@
       }
 
       function init() {
-        var timeout = this.window.setInterval(function() {
-          pollHandler();
-        }, 250);
+        this.window.setInterval(pollHandler, 250);
 
         stage = new createjs.Stage("myCanvas");
-        let board = new createjs.Container();
+        const board = new createjs.Container();
         board.addChild(new createjs.Bitmap("images/bracket.png"));
         board.addChild(newMatch("ws1", 107, 158));
         board.addChild(newMatch("ws2", 107, 358));

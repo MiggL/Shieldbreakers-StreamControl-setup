@@ -46,7 +46,7 @@
 
       function init() {
         initDoubles();
-        let board = new createjs.Container();
+        const board = new createjs.Container();
 
         scoreboard = new createjs.Bitmap("images/doubles-overlay.png");
         scoreboard.regX = 0;
@@ -54,16 +54,16 @@
 
         board.addChild(scoreboard);
 
-        let name1Container = newDynText("pName1", NAME_X, NAME_Y, NAME_MAX_WIDTH, NAME_FONT_SIZE, FONT_COLOR);
+        const name1Container = newDynText("pName1", NAME_X, NAME_Y, NAME_MAX_WIDTH, NAME_FONT_SIZE, FONT_COLOR);
         name1Container.name = "teammateName1";
         board.addChild(name1Container);
-        let name2Container = newMirroredDynText("pName2", "pName1");
+        const name2Container = newMirroredDynText("pName2", "pName1");
         name2Container.name = "teammateName2";
         board.addChild(name2Container);
         
-        let pCountry1Container = newDynImage("pCountry1", FLAG_A_X, FLAG_Y, FLAG_PATH);
+        const pCountry1Container = newDynImage("pCountry1", FLAG_A_X, FLAG_Y, FLAG_PATH);
         pCountry1Container.alpha = FLAG_ALPHA;
-        let teammateCountry1Container = newDynImage("teammateCountry1", FLAG_B_X, FLAG_Y, FLAG_PATH);
+        const teammateCountry1Container = newDynImage("teammateCountry1", FLAG_B_X, FLAG_Y, FLAG_PATH);
         teammateCountry1Container.alpha = FLAG_ALPHA;
         board.addChild(pCountry1Container);
         board.addChild(teammateCountry1Container);

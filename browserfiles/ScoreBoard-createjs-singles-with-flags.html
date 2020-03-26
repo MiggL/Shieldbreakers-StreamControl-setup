@@ -41,7 +41,7 @@
       const FLAG_PATH = "images/GoSquared/cropped/iso/64shiny/";
 
       function init() {
-        let board = new createjs.Container();
+        const board = new createjs.Container();
 
         scoreboard = new createjs.Bitmap("images/singles-overlay-with-flags.png");
         scoreboard.regX = 0;
@@ -58,7 +58,7 @@
         board.addChild(newDynImage("pCountry1", FLAG_X, FLAG_Y, FLAG_PATH));
         board.addChild(newMirroredDynImage("pCountry2", "pCountry1"));
 
-        board.addChild(newDynText("pScore1", SCORE_X, SCORE_Y, SCORE_MAX_WIDTH, SCORE_FONT_SIZE, "blue"));
+        board.addChild(newDynText("pScore1", SCORE_X, SCORE_Y, SCORE_MAX_WIDTH, SCORE_FONT_SIZE, FONT_COLOR));
         board.addChild(newMirroredDynText("pScore2", "pScore1"));
 
         board.addChild(newDynText("round", ROUND_X, ROUND_Y, ROUND_MAX_WIDTH, ROUND_FONT_SIZE, FONT_COLOR));

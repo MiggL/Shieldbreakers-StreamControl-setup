@@ -17,7 +17,7 @@
  * Shieldbreakers-StreamControl-setup.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//Depends on common.js, easeljs, tweenjs.
+//Depends on easeljs, tweenjs.
 
 const xhr = new XMLHttpRequest();
 xhr.responseType = 'json';
@@ -26,9 +26,9 @@ let doUpdate = false;
 
 let timestamp;
 let timestampOld;
-let dynamicTexts = new Map();
+const dynamicTexts = new Map();
 function newDynText(name, x, y, maxWidth, fontsize, fontcolor) {
-  let dynamicText = new createjs.Text(
+  const dynamicText = new createjs.Text(
     "",
     `${fontsize}px Helvetica`,
     fontcolor
@@ -39,13 +39,6 @@ function newDynText(name, x, y, maxWidth, fontsize, fontcolor) {
   dynamicText.textAlign = "center";
   dynamicTexts.set(name, dynamicText);
   return dynamicText;
-}
-function addMirroredDynamicText(name, mirrorName) {
-  let dynamicText = dynamicTexts.get(mirrorName).clone();
-  dynamicText.x = $("myCanvas").attr("width") - dynamicText.x;
-  dynamicTexts.set(name, dynamicText);
-  //clones parent?
-  //board.addChild(dynamicText);
 }
 
 function pollHandler() {
@@ -67,8 +60,8 @@ function pollHandler() {
 }
 
 function updateText(dynamicText, name, dynTexts) {
-  let newText = xhr.response[name];
-  if (dynamicText.text != newText) {
+  const newText = xhr.response[name];
+  if (dynamicText.text !== newText) {
     animating = true;
     createjs.Tween.get(dynamicText)
       .to({alpha:0},500,createjs.Ease.quintIn)
@@ -77,10 +70,10 @@ function updateText(dynamicText, name, dynTexts) {
 
         //fade losing player in bracket overlay
         if (name.endsWith("p1s") || name.endsWith("p2s")) {
-          let oppNaStr = name.substr(0, name.length-2) + (name.endsWith("1s")?"2":"1");
-          let oppSc = parseInt(dynTexts.get(oppNaStr + "s").text);
-          let oppNa = dynTexts.get(oppNaStr);
-          let myNa = dynTexts.get(name.substr(0, name.length-1));
+          const oppNaStr = name.substr(0, name.length-2) + (name.endsWith("1s")?"2":"1");
+          const oppSc = parseInt(dynTexts.get(oppNaStr + "s").text);
+          const oppNa = dynTexts.get(oppNaStr);
+          const myNa = dynTexts.get(name.substr(0, name.length-1));
           if (oppSc < parseInt(newText)) {
             oppNa.color = losecolor;
             myNa.color = fontcolor;
