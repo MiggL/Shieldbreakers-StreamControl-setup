@@ -97,3 +97,8 @@ function updateText(dynamicText, name, dynTexts) {
       .call(function() {animating = false;});
   }
 }
+
+function enterFrame(event) {
+  if (animating)
+    stage.update(event);
+}
