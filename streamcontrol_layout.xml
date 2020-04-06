@@ -18,28 +18,29 @@
 
   <spinBox id="pScore1" x="270" y="10" width="40" height="32" maximum="999" />
   <spinBox id="pScore2" x="270" y="62" width="40" height="32" maximum="999" />
-  <button type="reset" x="320" y="10" width="40" height="23" tooltip="Clear Player 1 fields" id="clear1" reset="pName1,pCountry1,pChar1,teammateName1,teammateCountry1,teammateChar1">Clear</button>
-  <button type="reset" x="360" y="10" width="60" height="23" tooltip="Clear Players, Characters, and Scores" id="newset"
+  <button id="clear1" type="reset" x="320" y="10" width="40" height="23" tooltip="Clear Player 1 fields" reset="pName1,pCountry1,pChar1,teammateName1,teammateCountry1,teammateChar1">Clear</button>
+  <button id="newset" type="reset" x="360" y="10" width="60" height="23" tooltip="Clear Players, Characters, and Scores"
           reset="pName1,pName2,teammateName1,teammateName2,pCountry1,pCountry2,teammateCountry1,teammateCountry2,pChar1,pChar2,teammateChar1,teammateChar2,pScore1,pScore2">New Set</button>
-  <button type="reset" x="360" y="36" width="60" height="23" tooltip="Set Scores to 0" id="reset"
-          reset="pScore1,pScore2">0 - 0</button>
-  <button type="reset" x="320" y="62" width="40" height="23" tooltip="Clear Player 2 fields" id="clear2" reset="pName2,pCountry2,pChar2,teammateName2,teammateCountry2,teammateChar2">Clear</button>
-  <button type="swap" x="360" y="62" width="60" height="23" tooltip="Swap Players, Characters, and Scores" id="swap" swapSet1="pName1,pScore1,pCountry1,pChar1,teammateName1,teammateCountry1,teammateChar1" swapSet2="pName2,pScore2,pCountry2,pChar2,teammateName2,teammateCountry2,teammateChar2">Swap</button>
+  <button id="reset" type="reset" x="360" y="36" width="60" height="23" tooltip="Set Scores to 0" reset="pScore1,pScore2">0 - 0</button>
+  <button id="clear2" type="reset" x="320" y="62" width="40" height="23" tooltip="Clear Player 2 fields" reset="pName2,pCountry2,pChar2,teammateName2,teammateCountry2,teammateChar2">Clear</button>
+  <button id="swapPlayers" type="swap" x="360" y="62" width="60" height="23" tooltip="Swap Players, Characters, and Scores"
+          swapSet1="pName1,pScore1,pCountry1,pChar1,teammateName1,teammateCountry1,teammateChar1" swapSet2="pName2,pScore2,pCountry2,pChar2,teammateName2,teammateCountry2,teammateChar2">Swap</button>
   <label x="10" y="119" width="46" height="13">Contest</label>
   <label x="10" y="149" width="46" height="13">Round</label>
   <lineEdit id="contest" x="60" y="115" width="321" height="20" />
   <lineEdit id="round" x="60" y="145" width="321" height="20"/>
   
   <label x="40" y="200" width="100" height="13">Commentator 1</label>
+  <button id="swapCommentators" type="swap" x="170" y="195" width="80" height="23" tooltip="Swap Commentators" swapSet1="comm1name,comm1twit" swapSet2="comm2name,comm2twit">Swap</button>
   <label x="260" y="200" width="100" height="13">Commentator 2</label>
   <label x="10" y="220" width="50" height="13">Name</label>
   <label x="10" y="250" width="50" height="13">Twitter</label>
-  <lineEdit id="comm1name" x="65" y="218" width="121" height="20" />
-  <lineEdit id="comm1twit" x="65" y="248" width="121" height="20"/>
+  <lineEdit id="comm1name" x="65" y="218" width="121" height="20" dataSet="commentators.csv" />
+  <lineEdit id="comm1twit" x="65" y="248" width="121" height="20" dataSet="commentators.csv" dataField="2" master="comm1name" />
   <label x="230" y="220" width="50" height="13">Name</label>
   <label x="230" y="250" width="50" height="13">Twitter</label>
-  <lineEdit id="comm2name" x="285" y="218" width="121" height="20" />
-  <lineEdit id="comm2twit" x="285" y="248" width="121" height="20"/>
+  <lineEdit id="comm2name" x="285" y="218" width="121" height="20" dataSet="commentators.csv" />
+  <lineEdit id="comm2twit" x="285" y="248" width="121" height="20" dataSet="commentators.csv" dataField="2" master="comm2name" />
  </tab>
  <tab name="Load from challonge">
      <challonge x="20" y="0" width="400" height="280"
